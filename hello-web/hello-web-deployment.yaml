@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-web-deployment
+  labels:
+    app: hello-web
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: hello-web
+  template:
+    metadata:
+      labels:
+        app: hello-web
+    spec:
+      containers:
+      - name: hello-web
+        image: jithendarramagiri1998/hello-web:2.0
+        ports:
+        - containerPort: 8080
+
