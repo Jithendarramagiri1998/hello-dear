@@ -5,7 +5,7 @@ pipeline {
         DOCKERHUB_USER = "jithendarramagiri1998"
         APP_NAME = "hello-web"
         IMAGE_TAG = "latest"
-        AWS_REGION = "ap-south-1"   // update region if needed
+        AWS_REGION = "ap-south-1"   // your cluster region
         CLUSTER_NAME = "hello-cluster"
     }
 
@@ -58,12 +58,13 @@ pipeline {
         stage('Deploy to EKS') {
             steps {
                 withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-cred']]) {
-                dir('hello-web') {
-                    sh "aws eks --region $AWS_REGION update-kubeconfig --name $CLUSTER_NAME"
-                    sh "kubectl apply -f hello-web-deployment.yaml"
-                    sh "kubectl apply -f hello-web-service.yaml"
+                    dir('hello-web') {
+                        sh "aws eks --region $AWS_REGION update-kubeconfig --name $CLUSTER_NAME"
+                        sh "kubectl apply -f hello-web-deployment.yaml"
+                        sh "kubectl apply -f hello-web-service.yaml"
+                    }
                 }
             }
         }
     }
-}
+} // <--- Make sure this closing brace is present
