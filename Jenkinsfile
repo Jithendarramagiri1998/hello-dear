@@ -57,6 +57,7 @@ pipeline {
 
         stage('Deploy to EKS') {
             steps {
+                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-cred']]) {
                 dir('hello-web') {
                     sh "aws eks --region $AWS_REGION update-kubeconfig --name $CLUSTER_NAME"
                     sh "kubectl apply -f hello-web-deployment.yaml"
