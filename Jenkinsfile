@@ -4,7 +4,7 @@ pipeline {
     environment {
         DOCKERHUB_USER = "jithendarramagiri1998"
         APP_NAME = "hello-web"
-        IMAGE_TAG = "latest"
+        IMAGE_TAG = "${env.BUILD_NUMBER}"
         AWS_REGION = "ap-south-1"   // your cluster region
         CLUSTER_NAME = "hello-cluster"
     }
