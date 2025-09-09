@@ -20,6 +20,7 @@ pipeline {
             steps {
                 dir('hello-web') {
                     sh 'mvn clean package -DskipTests'
+                    sh 'cp target/hello-web-1.0-SNAPSHOT.war target/hello-web.war'
                 }
             }
         }
