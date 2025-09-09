@@ -5,7 +5,7 @@ pipeline {
         DOCKERHUB_USER = "jithendarramagiri1998"
         APP_NAME = "hello-web"
         IMAGE_TAG = "latest"
-        AWS_REGION = "us-east-1"
+        AWS_REGION = "ap-south-1"   // update region if needed
         CLUSTER_NAME = "hello-cluster"
     }
 
@@ -18,40 +18,49 @@ pipeline {
 
         stage('Build with Maven') {
             steps {
-                sh 'mvn clean package -DskipTests'
+                dir('hello-web') {
+                    sh 'mvn clean package -DskipTests'
+                }
             }
         }
 
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('sonarqube') {
-                    sh 'mvn sonar:sonar'
+                dir('hello-web') {
+                    withSonarQubeEnv('sonarqube') {
+                        sh 'mvn sonar:sonar'
+                    }
                 }
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                sh "docker build -t $DOCKERHUB_USER/$APP_NAME:$IMAGE_TAG ."
+                dir('hello-web') {
+                    sh "docker build -t $DOCKERHUB_USER/$APP_NAME:$IMAGE_TAG ."
+                }
             }
         }
 
         stage('Push to DockerHub') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-cred', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
-                    sh 'echo $PASS | docker login -u $USER --password-stdin'
-                    sh "docker push $DOCKERHUB_USER/$APP_NAME:$IMAGE_TAG"
+                    dir('hello-web') {
+                        sh 'echo $PASS | docker login -u $USER --password-stdin'
+                        sh "docker push $DOCKERHUB_USER/$APP_NAME:$IMAGE_TAG"
+                    }
                 }
             }
         }
 
         stage('Deploy to EKS') {
             steps {
-                sh "aws eks --region $AWS_REGION update-kubeconfig --name $CLUSTER_NAME"
-                sh "kubectl apply -f k8s/hello-web-deployment.yaml"
-                sh "kubectl apply -f k8s/hello-web-service.yaml"
+                dir('hello-web') {
+                    sh "aws eks --region $AWS_REGION update-kubeconfig --name $CLUSTER_NAME"
+                    sh "kubectl apply -f hello-web-deployment.yaml"
+                    sh "kubectl apply -f hello-web-service.yaml"
+                }
             }
         }
     }
 }
-
