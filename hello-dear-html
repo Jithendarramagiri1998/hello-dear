@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hello Web Test</title>
+</head>
+<body>
+    <h1 style="color: blue; text-align: center;">Hello, this is the new version!</h1>
+    <p style="text-align: center;">Version 1.0.30 deployed successfully.</p>
+</body>
+</html>
