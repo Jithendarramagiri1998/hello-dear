@@ -4,7 +4,7 @@ FROM tomcat:9.0
 RUN rm -rf /usr/local/tomcat/webapps/ROOT
 
 # Copy WAR file
-COPY target/hello-web.war /usr/local/tomcat/webapps/ROOT.war
+COPY target/hello-web-1.0-SNAPSHOT.war /usr/local/tomcat/webapps/ROOT.war
 
 EXPOSE 8080
 CMD ["catalina.sh", "run"]
