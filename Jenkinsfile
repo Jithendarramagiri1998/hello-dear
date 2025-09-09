@@ -37,7 +37,8 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 dir('hello-web') {
-                    sh "docker build -t $DOCKERHUB_USER/$APP_NAME:$IMAGE_TAG ."
+                    sh 'ls -l target/'  // check WAR file exists
+                    sh "docker build -f Dockerfile -t $DOCKERHUB_USER/$APP_NAME:$IMAGE_TAG ."
                 }
             }
         }
